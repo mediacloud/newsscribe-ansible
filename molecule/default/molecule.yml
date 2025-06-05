@@ -1,0 +1,21 @@
+---
+driver:
+  name: docker
+
+# UGH! Force addrs, so containers accessible
+# (otherwise have to do testing from a container!)
+# NOTE! see also "docker_network" in create.yml
+# (trying {{mc_ipv4_prefix}}.n failed)
+platforms:
+  - name: es01
+    pre_build_image: true
+    ipv4: "192.168.250.11"
+  - name: es02
+    pre_build_image: true
+    ipv4: "192.168.250.12"
+  - name: es03
+    pre_build_image: true
+    ipv4: "192.168.250.13"
+  - name: es04
+    pre_build_image: true
+    ipv4: "192.168.250.14"

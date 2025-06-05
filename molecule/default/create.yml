@@ -1,0 +1,50 @@
+---
+- name: Create
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  # no_log: "{{ not lookup('env', 'MOLECULE_DEBUG') | bool }}"
+
+  # create Dockerfile from Dockerfile.j2?
+  # build docker image?
+  tasks:
+    - name: Include vars.yml
+      ansible.builtin.include_vars:
+        file: vars.yml
+
+    - name: Create docker network
+      docker_network:
+        name: "{{ mc_network }}"
+        ipam_config:
+          # UGH! force single network!!
+          # See ipv4 entries in molecule.yml
+          - subnet: "192.168.250.0/24"
+        state: present
+
+    # _COULD_ mount a per-server /data volume w/ directory based on item.name
+    # see https://github.com/ansible/molecule/issues/1159#issuecomment-371758925
+    # for usage that passes data from platforms dict list 
+    - name: Create molecule instances
+      docker_container:
+        name: "{{ item.name }}"
+        hostname: "{{ item.name }}"
+        image: "{{ mc_image }}"
+        state: started
+        recreate: false
+        log_driver: json-file
+        command: "{{ item.command | default('sh -c \"while true; do sleep 10000; done\"') }}"
+        networks:
+          - name: "{{ mc_network }}"
+            ipv4_address: "{{ item.ipv4 }}"
+      register: server
+      with_items: "{{ molecule_yml.platforms }}"
+      async: 7200
+      poll: 0
+
+    - name: Wait for instance(s) creation to complete
+      async_status:
+        jid: "{{ item.ansible_job_id }}"
+      register: docker_jobs
+      until: docker_jobs.finished
+      retries: 300
+      with_items: "{{ server.results }}"

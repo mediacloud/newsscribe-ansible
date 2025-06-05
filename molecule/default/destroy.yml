@@ -1,0 +1,16 @@
+---
+- name: Destroy
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  # clean up docker image??
+  tasks:
+    - name: Include vars.yml
+      ansible.builtin.include_vars:
+        file: vars.yml
+
+    - name: Remove docker network
+      docker_network:
+        name: "{{ mc_network }}"
+        state: absent

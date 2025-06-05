@@ -1,0 +1,14 @@
+---
+# openssh not needed? get ubuntu official image??
+mc_image: devdotnetorg/openssh-server:ubuntu-24.04
+mc_network: newsscribe-ansible-test
+
+# clone destination for ansible-elasticsearch repo
+mc_tmp: "/tmp/ansible-elasticsearch"
+
+# GET THESE CORRECTLY?!!
+ansible_distribution: Ubuntu
+ansible_distribution_version: "24.04"
+ansible_os_family: Debian
+
+groups:
