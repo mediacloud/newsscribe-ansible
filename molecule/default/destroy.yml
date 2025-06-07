@@ -6,6 +6,11 @@
 
   # clean up docker image??
   tasks:
+    - name: Include top level es-vars.yml
+      ansible.builtin.include_vars:
+        file: "../../es-vars.yml"
+
+    # after es-vars to allow override
     - name: Include vars.yml
       ansible.builtin.include_vars:
         file: vars.yml
