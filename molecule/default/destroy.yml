@@ -19,4 +19,4 @@
       ansible.builtin.file:
         path: "{{ mc_tmp }}"
         state: absent
-      when: mc_es_ansible_force_checkout_cleanup
+      when: mc_es_ansible_elasticsearch_force_checkout_cleanup
