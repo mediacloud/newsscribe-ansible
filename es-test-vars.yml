@@ -3,15 +3,14 @@
    - es-vars.yml
   hosts: local
   tasks:
-   - name: Display inventory_hostname
-     ansible.builtin.debug:
-      msg: "{{ inventory_hostname }}"
-   - name: Display mc_es_seed_hosts
-     ansible.builtin.debug:
-      msg: "{{ mc_es_seed_hosts }}"
-   - name: Display mc_es_master
-     ansible.builtin.debug:
-      msg: "{{ mc_es_master }}"
-   - name: Display es_config
-     ansible.builtin.debug:
-      msg: "{{ es_config }}"
+   - debug: var=mc_es_master
+   - debug: var=mc_es_seed_hosts
+   - debug: var=es_config # shows values appended to /etc/elastic.../elasticsearch.yml
+   - debug: var=ansible_all_ipv4_addresses
+   - debug: var=ansible_default_ipv4
+   - debug: var=ansible_host
+   - debug: var=ansible_hostname
+   - debug: var=inventory_hostname
+
+   # https://stackoverflow.com/questions/40235550/how-to-inspect-a-json-response-from-ansible-uri-call
+

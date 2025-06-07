@@ -5,41 +5,48 @@
   gather_facts: false
   # no_log: "{{ not lookup('env', 'MOLECULE_DEBUG') | bool }}"
 
-  # create Dockerfile from Dockerfile.j2?
-  # build docker image?
   tasks:
     - name: Include vars.yml
       ansible.builtin.include_vars:
         file: vars.yml
 
+    # if needed, create Dockerfile from a Dockerfile.j2 template,
+    # and build docker image
+
     - name: Create docker network
       docker_network:
-        name: "{{ mc_network }}"
-        ipam_config:
-          # UGH! force single network!!
-          # See ipv4 entries in molecule.yml
-          - subnet: "192.168.250.0/24"
+        name: "{{ mc_network_name }}"
         state: present
 
-    # _COULD_ mount a per-server /data volume w/ directory based on item.name
-    # see https://github.com/ansible/molecule/issues/1159#issuecomment-371758925
-    # for usage that passes data from platforms dict list 
+    # https://github.com/ansible/molecule/issues/1159#issuecomment-371758925
+    # has example docker_container taking data from platforms dict list
+    # also baking image
+
     - name: Create molecule instances
       docker_container:
         name: "{{ item.name }}"
         hostname: "{{ item.name }}"
         image: "{{ mc_image }}"
+        privileged: true # for systemd
+        cgroupns_mode: host # for systemd [*]
         state: started
         recreate: false
+        command: "{{ mc_image_command }}"
         log_driver: json-file
-        command: "{{ item.command | default('sh -c \"while true; do sleep 10000; done\"') }}"
+        volumes:
+          # allows devdotnetorg/openssh-server:ubuntu-20.04 to run
+          # (fails on systemctl daemon-reload):
+          - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
+          # _COULD_ mount a per-server /data volume
+          # w/ local directory based on item.name to persist data
         networks:
-          - name: "{{ mc_network }}"
-            ipv4_address: "{{ item.ipv4 }}"
+          - name: "{{ mc_network_name }}"
       register: server
       with_items: "{{ molecule_yml.platforms }}"
       async: 7200
       poll: 0
+
+    # [*] https://www.jeffgeerling.com/blog/2022/docker-and-systemd-getting-rid-dreaded-failed-connect-bus-error
 
     - name: Wait for instance(s) creation to complete
       async_status:

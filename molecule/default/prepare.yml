@@ -5,15 +5,17 @@
   gather_facts: false
   # no_log: "{{ not lookup('env', 'MOLECULE_DEBUG') | bool }}"
 
-  # create Dockerfile from Dockerfile.j2?
-  # build docker image?
+  # create Dockerfile from a Dockerfile.j2 template,
+  # and build docker image?
   tasks:
+    - name: Include es-vars.yml
+      ansible.builtin.include_vars:
+        file: ../../es-vars.yml
+
     - name: Include vars.yml
       ansible.builtin.include_vars:
         file: vars.yml
 
-    - name: Clone mediacloud/ansible-elasticsearch
-      ansible.builtin.git:
-        repo: "https://github.com/mediacloud/ansible-elasticsearch.git"
-        dest: "{{ mc_tmp }}"
-        force: true
+    - name: Get ansible-elasticsearch
+      ansible.builtin.include_tasks:
+        file: "../../tasks/get-ansible-elasticsearch.yml"

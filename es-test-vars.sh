@@ -1,11 +1,11 @@
 #!/bin/sh
 
 # command to run es-test-vars.yml playbook
-# for testing es-inventory.yml and es-vars.yml
+# for testing/dumping es-vars.yml
 
 make setup
 venv/bin/ansible-playbook \
     --connection local \
-    -i es-inventory.yml \
+    -i es-test-inventory.yml \
     $* \
     es-test-vars.yml

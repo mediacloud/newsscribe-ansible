@@ -1,0 +1,13 @@
+# used by es-test-vars.yml/sh
+local:
+  hosts:
+    host1:
+      mc_es_network_host: 1.2.3.1
+    host2:
+      mc_es_network_host: 1.2.3.2
+  vars:
+    mc_es_http_port: 9299
+    mc_es_transport_port: 9399
+    mc_es_seed_hosts:
+      - host1
+

@@ -1,14 +1,35 @@
 ---
-# openssh not needed? get ubuntu official image??
-mc_image: devdotnetorg/openssh-server:ubuntu-24.04
-mc_network: newsscribe-ansible-test
+# included by different molecule phase playbooks for common variables
 
-# clone destination for ansible-elasticsearch repo
-mc_tmp: "/tmp/ansible-elasticsearch"
+es_heap_size: 1g
 
-# GET THESE CORRECTLY?!!
-ansible_distribution: Ubuntu
-ansible_distribution_version: "24.04"
-ansible_os_family: Debian
+################ mc_es_xxx: override defaults
 
-groups:
+# force cluster initialization!
+mc_es_initialize: true
+
+mc_es_network_host: 0.0.0.0
+
+mc_es_reindex_whitelist: []
+
+# NOTE: must match entries in molecule.yml "platforms" dict
+# WISH: assemble using a property in "platforms" entries
+mc_es_seed_hosts:
+  - es-test-1
+  - es-test-2
+  - es-test-3
+
+# uncomment for debugging (avoid pushing to ansible-elasticsearch repo):
+#mc_es_ansible_elasticsearch_force_checkout_cleanup: false
+
+################ settings used in molecule files (maybe use mc_mol_XXX?)
+
+# ssh not needed, but contains useful packages (too fat?):
+mc_image: devdotnetorg/openssh-server:ubuntu-24.04 # 350MB
+#mc_image: jrei/systemd-ubuntu:24.04 # 190MB, no sudo (too slim)
+
+#mc_image_command: "sh -c \"while true; do sleep 10000; done\""
+mc_image_command: "/usr/sbin/init" # symlink to systemd
+
+# ansible network to connect containers:
+mc_network_name: newsscribe-molecule-test # used in create, destroy

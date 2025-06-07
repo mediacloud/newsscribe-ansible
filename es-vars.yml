@@ -1,4 +1,5 @@
-# TEMPLATE VARIABLES: PLEASE KEEP SORTED!!
+# To test this file, run ./es-test-vars.sh
+
 # DANGER! Anything added here crushes per-host/group vars from es-inventory.yml!!
 
 # NOTE! variables expanded lazily (when variable referenced/expanded)
@@ -8,36 +9,60 @@
 # * "set_fact" in playbook
 # [IMO it's the ONLY thing about ansible that's better than shell scripts! -phil]
 
+# PLEASE KEEP SORTED!
+
+# timeout in ansible-elasticsearch/tasks/main.yml:
+es_api_sleep: 5
+
+# MC addition to disable cert generation:
+es_certificates: false
+
 #### vars for ansible-elasticsearch (all start with es_)
 # key/values copied to elasticsearch.yml output file:
+# IF YOU MAKE CHANGES, TEST WITH ./es-test-vars.sh!!!
 es_config:
   # PLEASE ADD ITEMS IN SORTED ORDER BELOW THIS LINE!
   bootstrap.memory_lock: true
+
+  cluster.initial_master_nodes: "{{ mc_es_initialize | ternary(mc_es_seed_hosts,[]) }}"
 
   # seed hosts is list of master-elibile nodes; port is defaulted from transport.port
   # (NOTE! if you add ports to mc_es_seed_hosts you'll break the mc_es_master test below)
   discovery.seed_hosts: "{{ mc_es_seed_hosts }}"
 
-  http.host: 0.0.0.0 # allow from off-host connections
+  http.host: 0.0.0.0 # allow connections from off-host
 
   # to override, set in es-inventory group vars section:
-  http.port: "{{ mc_es_http_port | default('9200') }}"
+  http.port: "{{ mc_es_http_port }}"
 
-  # must be set per-host in es-inventory:
-  network.host: "{{ mc_es_network_host | default('NEED_NETWORK_HOST') }}"
+  # default to address of interface with default route
+  # rather than rely on all servers having the same interface names
+  # (can set mc_es_network_host per-host in inventory)
+  network.host: "{{ mc_es_network_host | default(ansible_default_ipv4.address) }}"
 
   # node.name defaults to inventory_hostname
 
   node.roles: "{{ mc_es_node_roles }}"
 
+  reindex.remote.whitelist: "{{ mc_es_reindex_whitelist | default('') }}"
+
   # to override, set in es-inventory group vars section:
-  transport.port: "{{ mc_es_transport_port | default('9300') }}"
+  transport.port: "{{ mc_es_transport_port }}"
+
+  xpack.security.enabled: false
+  xpack.security.enrollment.enabled: false
+  xpack.security.http.ssl:
+    enabled: false
+  xpack.security.transport.ssl:
+    enabled: false
+
   # PLEASE ADD ITEMS ABOVE IN SORTED ORDER!
 
 es_data_dirs: ["/data/elasticsearch/data"]
 es_heap_size: 32256m    # 31.5g
-es_java: openjdk-21-jre-headless
-es_java_install: true
+# ES7/8 come with bundled /usr/share/elasticsearch/jdk/bin/java
+#es_java: openjdk-21-jre-headless
+#es_java_install: true
 es_log_dir: "/data/elasticsearch/logs"
 es_start_service: true
 es_templates: false
@@ -52,11 +77,32 @@ host_key_checking: false
 
 # elastic search specific vars (just about everything) should start with mc_es_
 
-mc_es_master: "{{ inventory_hostname in mc_es_seed_hosts }}"
-mc_es_node_roles: "{% if mc_es_master %}{{ mc_es_node_roles_master }}{% else %}{{ mc_es_node_roles_hot }}{% endif %}"
+# checkout of mc_es_ansible_elasticsearch_repo
+mc_es_ansible_elasticsearch: "{{ mc_es_tmp }}/ansible-elasticsearch"
+# force checkout, and remove
+mc_es_ansible_elasticsearch_force_checkout_cleanup: true
+mc_es_ansible_elasticsearch_repo: "https://github.com/mediacloud/ansible-elasticsearch.git"
 
-mc_es_node_roles_hot: ["data_content", "data_hot"]
-mc_es_node_roles_master: ["master", "data_content", "data_hot"]
+mc_es_http_port: 9200
+
+# **WHEN INITIALIZING A NEW CLUSTER FROM SCRATCH**
+# set to true, deploy, then set to false and run again!
+mc_es_initialize: false # do not check-in set to true!!!
+
+# ansible_hostname does not work here for es-test-vars?
+mc_es_master: "{{ inventory_hostname in mc_es_seed_hosts }}"
+
+mc_es_node_roles: "{{ mc_es_master | ternary(mc_es_node_roles_master,mc_es_node_roles_data) }}"
+mc_es_node_roles_data: ["data"]
+mc_es_node_roles_master: ["master", "data"]
+
+# TEMPORARY while reindexing from old cluster:
+mc_es_reindex_whitelist: ramos.angwin:9200,bradley.angwin:9200,woodward.angwin:9200
+
+# used in destroy
+mc_es_tmp: "tmp"
+
+mc_es_transport_port: 9300
 
 # PLEASE KEEP THIS FILE IN SORTED ORDER!
 # (KEEP THIS LINE LAST!)

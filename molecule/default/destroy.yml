@@ -12,5 +12,11 @@
 
     - name: Remove docker network
       docker_network:
-        name: "{{ mc_network }}"
+        name: "{{ mc_network_name }}"
         state: absent
+
+    - name: Remove temp files
+      ansible.builtin.file:
+        path: "{{ mc_tmp }}"
+        state: absent
+      when: mc_es_ansible_force_checkout_cleanup

@@ -1,4 +1,6 @@
 ansible
-# for ansible-elasticsearch role:
 jmespath
+molecule
+molecule-plugins[docker]
 six
+#yamllint

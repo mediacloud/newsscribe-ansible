@@ -1,25 +1,27 @@
 ---
-- name: ES install playbook
-  hosts: elasticsearch # selects group from inventory.yml
+- name: Playbook to install/configure newsscribe cluster servers
+  hosts: all
   vars_files:
-   - es-vars.yml # NOTE! overrides vars from inventory.yml
+   - es-vars.yml # NOTE! overrides vars from es-inventory.yml
+
+  # **** NOTE! *****
+  # If you add tasks to this file, also add to
+  # molecule/default/converge.yml!!!
+
   pre_tasks:
-   - name: Install packages for ansible-elasticsearch role
-     ansible.builtin.apt:
-      pkg:
-       - unzip # for elasticsearch-certificates.yml
-       # PLEASE KEEP ABOVE LIST IN SORTED ORDER!
-   # maybe use ansible.builtin.git here to get ansible-elasticsearch??
-  roles:
-   - "./roles/ansible-elasticsearch"
-
-  post_tasks:
-   - name: Install statsd agent
+   - name: Include install-es task
      ansible.builtin.include_tasks:
-      file: "tasks/install-statsd-agent.yml"
+       file: "tasks/install-es.yml"
 
-   # put tasks here to:
-   # 1. establish cluster ??
-   # 2. change params via API?
-   #    ie; https://discuss.elastic.co/t/how-to-disable-geoip-usage-in-7-14-0/281076/9
-   #    Use community.elastic elastic_cluster_settings module??
+   - name: Include install-statsd-agent task
+     ansible.builtin.include_tasks:
+       file: "tasks/install-statsd-agent.yml"
+
+   - name: Include create-motd task
+     ansible.builtin.include_tasks:
+       file: "tasks/create-motd.yml"
+
+   # run additional tasks here to:
+   # change params via API?
+   #  ie; https://discuss.elastic.co/t/how-to-disable-geoip-usage-in-7-14-0/281076/9
+   #  Use community.elastic elastic_cluster_settings module???????

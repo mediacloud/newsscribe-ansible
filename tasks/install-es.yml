@@ -1,0 +1,20 @@
+# run role from repo checked out by tasks/get-ansible-elasticsearch.yml
+# run from es-install and molecule/default/converge.yml
+
+- name: Install packages
+  ansible.builtin.apt:
+    pkg:
+    - dbus # for systemctl/systemd
+    - gpg # for ES repo key
+    #- unzip # for certs
+
+# man pages not installed in containers!
+# install fails without man1 directory!
+- name: Check man1 directory
+  ansible.builtin.file:
+    path: /usr/share/man/man1
+    state: directory
+
+- name: Include ansible-elasticsearch role
+  ansible.builtin.include_role:
+    name: "{{ mc_es_ansible_elasticsearch }}"

@@ -1,0 +1,12 @@
+---
+# include_tasks file
+
+- name: Creating motd
+  copy:
+    dest: "/etc/motd"
+    content: |
+         ********************************************************************
+         * Media Cloud NewsScribe Elasticsearch server (not for other use!) *
+         *              This cluster configured using ansible!              *
+         *           (Please do not tweak this server by hand!!!)           *
+         ********************************************************************

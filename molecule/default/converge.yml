@@ -1,28 +1,40 @@
 ---
 - name: Converge
   hosts: all
-  gather_facts: false
+  gather_facts: true # for ansible_ vars used by ansible-elasticsearch
   tasks:
     - name: Include top level es-vars.yml
       ansible.builtin.include_vars:
         file: "../../es-vars.yml"
 
     # after es-vars to allow override
-    - name: Include vars.yml
+    - name: Include molecule vars.yml
       ansible.builtin.include_vars:
         file: "vars.yml"
 
-    - name: Install packages
-      ansible.builtin.apt:
-        pkg:
-        - git
-        - gpg
-        - unzip
+    # BEGIN should match task list in top level es-install.yml
+    - name: Include install-es task
+      ansible.builtin.include_tasks:
+        file: "../../tasks/install-es.yml"
 
-    - name: Create directories necessary for installs
-      ansible.builtin.command:
-        cmd: "mkdir -p /usr/share/man/man1"
+    - name: Include install-statsd-agent task
+      ansible.builtin.include_tasks:
+        file: "../../tasks/install-statsd-agent.yml"
 
-    - name: Run ansible-elasticsearch role
-      include_role:
-        name: "{{ mc_tmp }}"
+    - name: Include create-motd task
+      ansible.builtin.include_tasks:
+        file: "../../tasks/create-motd.yml"
+
+    # END should match es-install playbook
+
+    # XXX run from "verify" stage?! from where??
+    - name: Check cluster status is green
+      uri:
+        url: http://localhost:{{mc_es_http_port}}/_cluster/stats
+        method: GET
+        return_content: yes
+        status_code: 200
+      register: result
+      until: result.json.status == "green"
+      retries: 100
+      delay: 2
