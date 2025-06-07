@@ -1,9 +1,9 @@
 ---
-# include_tasks file
+# include_tasks file (included from all.yml)
 
 # NOTE! Installing other tools from the system-dev-ops repo
 # (nginx-agent statsd-proxy) are 99% identical but not worth
-# making a (sub) role to do the work unless/until a playbook
+# making an argument taking role to do the work unless/until a playbook
 # to re-create the web server (web-search, rss-fetcher, grafana)
 # is desired.
 

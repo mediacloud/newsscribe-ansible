@@ -1,4 +1,18 @@
 ---
+# NOTE! you can disable this when debugging by running
+#	"molecule test --destroy=never"
+# (AFTER sourcing venv/bin/activate: molecule expects "ansible-xxx"
+# commands to be found in PATH) for more development advice, see the
+# top level README.md
+#
+# This allows you to inspect the state of the containers (eg; with
+# "docker exec -it es-test-N bash") after a failed run.
+
+# ***BUT*** if you don't run "molecule destroy" before the next
+# "molecule test" the old containers will be left in place which may
+# confound your tests, so always run a clean "make test"
+# (or "molecule test") before 
+
 - name: Destroy
   hosts: localhost
   connection: local
@@ -20,13 +34,11 @@
         name: "{{ item.name }}"
         state: absent
       with_items: "{{ molecule_yml.platforms }}"
-      when: mc_es_ansible_elasticsearch_force_checkout_cleanup
 
     - name: Remove docker network
       docker_network:
         name: "{{ mc_network_name }}"
         state: absent
-      when: mc_es_ansible_elasticsearch_force_checkout_cleanup
 
     - name: Remove temp files
       ansible.builtin.file:

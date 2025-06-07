@@ -24,23 +24,26 @@ mc_es_seed_hosts:
   - es-test-3
 
 # uncomment for debugging (avoid pushing to ansible-elasticsearch repo):
-#mc_es_ansible_elasticsearch_force_checkout_cleanup: false
+#mc_es_ansible_elasticsearch_force_checkout_cleanup: false # DO NOT COMMIT UNCOMMENTED!!!
 
 ################ settings used in molecule files (maybe use mc_mol_XXX?)
 
-# "A minimal systemd enabled Ubuntu 24.04 image for testing Ansible
-# roles with Molecule
-#
-# NOTE: This image does NOT contain Ansible tooling, e.g. ansible-core
-# or yamllint. Thus, the use case is as target host for Ansible
-# controllers or within the Molecule create/converge/test cycle."
-#
+# using:
 # https://github.com/trfore/docker-ubuntu2404-systemd
 # https://hub.docker.com/r/trfore/docker-ubuntu2404-systemd
+#
+# "A minimal systemd enabled Ubuntu 24.04 image for testing Ansible
+# roles with Molecule"
+#
+#   "NOTE: This image does NOT contain Ansible tooling,
+#   e.g. ansible-core or yamllint. Thus, the use case is as target
+#   host for Ansible controllers or within the Molecule
+#   create/converge/test cycle."
 mc_image: trfore/docker-ubuntu2404-systemd
 
 #mc_image_command: "sh -c \"while true; do sleep 10000; done\""
-mc_image_command: "/usr/sbin/init" # symlink to systemd
+#mc_image_command: "/usr/sbin/init" # symlink to systemd
+mc_image_command: "/lib/systemd/systemd"
 
 # ansible network to connect containers:
 mc_network_name: newsscribe-molecule-test # used in create, destroy

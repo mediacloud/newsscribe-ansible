@@ -1,5 +1,7 @@
-# run role from repo checked out by tasks/get-ansible-elasticsearch.yml
-# run from es-install and molecule/default/converge.yml
+# include_task file, included by tasks/all.yml
+
+# run role from ansible-elasticsearch repo checked out by
+# tasks/get-ansible-elasticsearch.yml
 
 - name: Install packages
   ansible.builtin.apt:

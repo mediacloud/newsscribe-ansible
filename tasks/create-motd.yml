@@ -1,5 +1,5 @@
 ---
-# include_tasks file
+# include_tasks file included by all.yml
 
 - name: Creating motd
   copy:

@@ -12,22 +12,11 @@
       ansible.builtin.include_vars:
         file: "vars.yml"
 
-    # BEGIN should match task list in top level es-install.yml
-    - name: Include install-es task
+    - name: Include tasks/all.yml
       ansible.builtin.include_tasks:
-        file: "../../tasks/install-es.yml"
+        file: "../../tasks/all.yml"
 
-    - name: Include install-statsd-agent task
-      ansible.builtin.include_tasks:
-        file: "../../tasks/install-statsd-agent.yml"
-
-    - name: Include create-motd task
-      ansible.builtin.include_tasks:
-        file: "../../tasks/create-motd.yml"
-
-    # END should match es-install playbook
-
-    # XXX run from "verify" stage?! from where??
+    # XXX run from "verify" stage?! from what node??
     - name: Check cluster status is green
       uri:
         url: http://localhost:{{mc_es_http_port}}/_cluster/stats
@@ -38,3 +27,6 @@
       until: result.json.status == "green"
       retries: 100
       delay: 2
+
+    # XXX also try storing document and retrieving??
+    # (take advantage of index autocreate??)

@@ -1,0 +1,21 @@
+---
+# include_tasks file: included by molecule/default/converge.yml and
+# ADD NEW TASKS TO THIS FILE via include_tasks!!
+
+- name: Include create-motd task
+  ansible.builtin.include_tasks:
+    file: "create-motd.yml"
+  tags:
+  - motd
+
+- name: Include install-es task
+  ansible.builtin.include_tasks:
+    file: "install-es.yml"
+  tags:
+  - es
+
+- name: Include install-statsd-agent task
+  ansible.builtin.include_tasks:
+    file: "install-statsd-agent.yml"
+  tags:
+  - stats

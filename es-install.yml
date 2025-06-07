@@ -9,19 +9,6 @@
   # molecule/default/converge.yml!!!
 
   pre_tasks:
-   - name: Include install-es task
+   - name: Include tasks/all
      ansible.builtin.include_tasks:
-       file: "tasks/install-es.yml"
-
-   - name: Include install-statsd-agent task
-     ansible.builtin.include_tasks:
-       file: "tasks/install-statsd-agent.yml"
-
-   - name: Include create-motd task
-     ansible.builtin.include_tasks:
-       file: "tasks/create-motd.yml"
-
-   # run additional tasks here to:
-   # change params via API?
-   #  ie; https://discuss.elastic.co/t/how-to-disable-geoip-usage-in-7-14-0/281076/9
-   #  Use community.elastic elastic_cluster_settings module???????
+       file: "tasks/all.yml"

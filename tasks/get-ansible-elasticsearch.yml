@@ -1,9 +1,8 @@
 ---
 # include_tasks file
-
-# used by molecule prepare (& yet to be created local playbook)
-
-- debug: var=mc_es_ansible_elasticsearch_force_checkout_cleanup
+# must be run locally (on host running ansible)
+# included by molecule/default/prepare.yml
+# (and yet to be created local pre-playbook)
 
 - name: Clone/update mediacloud/ansible-elasticsearch
   ansible.builtin.git:
@@ -11,4 +10,3 @@
     dest: "{{ mc_es_ansible_elasticsearch }}"
     force: "{{ mc_es_ansible_elasticsearch_force_checkout_cleanup }}"
     update: "{{ mc_es_ansible_elasticsearch_force_checkout_cleanup }}"
-
