@@ -19,7 +19,8 @@ all:
 
     mc_es_http_port: 9209 # TEMP until old cluster gone?
 
-    # strings here MUST match entries in hosts map above!
+    # master nodes:
+    # NOTE! strings here MUST match entries in hosts map above!
     mc_es_seed_hosts:
       - es01.newsscribe.angwin
       - es02.newsscribe.angwin

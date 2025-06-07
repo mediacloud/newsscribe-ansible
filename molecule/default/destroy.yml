@@ -15,10 +15,18 @@
       ansible.builtin.include_vars:
         file: vars.yml
 
+    - name: Remove docker containers
+      community.docker.docker_container:
+        name: "{{ item.name }}"
+        state: absent
+      with_items: "{{ molecule_yml.platforms }}"
+      when: mc_es_ansible_elasticsearch_force_checkout_cleanup
+
     - name: Remove docker network
       docker_network:
         name: "{{ mc_network_name }}"
         state: absent
+      when: mc_es_ansible_elasticsearch_force_checkout_cleanup
 
     - name: Remove temp files
       ansible.builtin.file:

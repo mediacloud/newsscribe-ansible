@@ -6,7 +6,9 @@
     pkg:
     - dbus # for systemctl/systemd
     - gpg # for ES repo key
+    - gpg-agent # for "apt-key add" for repo key
     #- unzip # for certs
+    cache_valid_time: 86400 # 1 day
 
 # man pages not installed in containers!
 # install fails without man1 directory!

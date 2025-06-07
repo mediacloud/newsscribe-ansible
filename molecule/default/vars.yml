@@ -28,9 +28,16 @@ mc_es_seed_hosts:
 
 ################ settings used in molecule files (maybe use mc_mol_XXX?)
 
-# sshd not needed, but contains useful packages (too fat?):
-mc_image: devdotnetorg/openssh-server:ubuntu-24.04 # 350MB
-#mc_image: jrei/systemd-ubuntu:24.04 # 190MB, no sudo (too slim)
+# "A minimal systemd enabled Ubuntu 24.04 image for testing Ansible
+# roles with Molecule
+#
+# NOTE: This image does NOT contain Ansible tooling, e.g. ansible-core
+# or yamllint. Thus, the use case is as target host for Ansible
+# controllers or within the Molecule create/converge/test cycle."
+#
+# https://github.com/trfore/docker-ubuntu2404-systemd
+# https://hub.docker.com/r/trfore/docker-ubuntu2404-systemd
+mc_image: trfore/docker-ubuntu2404-systemd
 
 #mc_image_command: "sh -c \"while true; do sleep 10000; done\""
 mc_image_command: "/usr/sbin/init" # symlink to systemd

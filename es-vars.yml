@@ -81,8 +81,13 @@ host_key_checking: false
 
 # checkout of mc_es_ansible_elasticsearch_repo
 mc_es_ansible_elasticsearch: "{{ mc_tmp }}/ansible-elasticsearch"
+
 # force checkout, and remove
-mc_es_ansible_elasticsearch_force_checkout_cleanup: true
+# (setting to false also preserves molecule docker containers)
+mc_es_ansible_elasticsearch_force_checkout_cleanup: true # do not check-in as "false"!!
+
+# repo to get ansible-elasticsearch from
+# (can change to private fork for testing, but do not merge change!!!)
 mc_es_ansible_elasticsearch_repo: "https://github.com/mediacloud/ansible-elasticsearch.git"
 
 mc_es_http_port: 9200
