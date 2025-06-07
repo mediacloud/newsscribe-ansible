@@ -32,9 +32,8 @@ Create venv with ansible and molecule with docker extensions.
 Run molecule test (create four node ES cluster)
 (must be run as root, or maybe a user in the docker group).
 
-The only red output you should see are three
-<span style="color:red">WARNING</span> messages for unused test steps
-at the start, and repeated at the end of the run.
+The only red output you should see are three WARNING messages for
+unused test steps at the start, and repeated at the end of the run.
 
 ### es-install.sh
 
