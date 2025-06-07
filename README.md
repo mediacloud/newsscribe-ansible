@@ -30,7 +30,11 @@ Create venv with ansible and molecule with docker extensions.
 ### make test
 
 Run molecule test (create four node ES cluster)
-(must be run as root, or maybe a user in the docker group)
+(must be run as root, or maybe a user in the docker group).
+
+The only red output you should see are three
+<span style="color:red">WARNING</span> messages for unused test steps
+at the start, and repeated at the end of the run.
 
 ### es-install.sh
 
@@ -80,11 +84,12 @@ Runs locally, before and after create/converge.
 2. Test often, checkpoint by commiting your changes, or
    saving files.  YAML is a hostile programming environment,
    and it's easy to break stuff.
-3. use "- debug: var=XXX" to check variable contents when debugging.
+3. Use ansible `- debug: var=XXX` directives
+   to check variable contents when debugging.
 4. ansible is a pain, and "debug" (see above) is your friend,
    but in this case, your ansible files are being run by
    ansible playbooks being run by molecule, so you're in
-   the deep end.
+   the deep end (a black box inside a black box).
 5. Keep it simple, avoid changes, don't be a hero.
 6. ALWAYS run "make test" (runs "molecule test")
    before opening a pull request, or pushing to
