@@ -78,7 +78,7 @@ host_key_checking: false
 # elastic search specific vars (just about everything) should start with mc_es_
 
 # checkout of mc_es_ansible_elasticsearch_repo
-mc_es_ansible_elasticsearch: "{{ mc_es_tmp }}/ansible-elasticsearch"
+mc_es_ansible_elasticsearch: "{{ mc_tmp }}/ansible-elasticsearch"
 # force checkout, and remove
 mc_es_ansible_elasticsearch_force_checkout_cleanup: true
 mc_es_ansible_elasticsearch_repo: "https://github.com/mediacloud/ansible-elasticsearch.git"
@@ -99,10 +99,10 @@ mc_es_node_roles_master: ["master", "data"]
 # TEMPORARY while reindexing from old cluster:
 mc_es_reindex_whitelist: ramos.angwin:9200,bradley.angwin:9200,woodward.angwin:9200
 
-# used in destroy
-mc_es_tmp: "tmp"
-
 mc_es_transport_port: 9300
+
+# used in molecule destroy playbook
+mc_tmp: "tmp"
 
 # PLEASE KEEP THIS FILE IN SORTED ORDER!
 # (KEEP THIS LINE LAST!)
