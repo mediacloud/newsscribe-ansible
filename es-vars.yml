@@ -26,6 +26,8 @@ es_config:
 
   cluster.initial_master_nodes: "{{ mc_es_initialize | ternary(mc_es_seed_hosts,[]) }}"
 
+  cluster.name: "{{ mc_es_cluster_name | default('elasticsearch') }}"
+
   # seed hosts is list of master-elibile nodes; port is defaulted from transport.port
   # (NOTE! if you add ports to mc_es_seed_hosts you'll break the mc_es_master test below)
   discovery.seed_hosts: "{{ mc_es_seed_hosts }}"
