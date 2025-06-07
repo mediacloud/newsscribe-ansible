@@ -1,5 +1,18 @@
 ## Install and configure Media Cloud NewsScribe cluster
 
+# NOTE!!!
+
+These files are outside the story-indexer repo to reduce any
+temptation to think that making changes is anything less than
+dangerous and terrifying!!
+
+It uses mediacloud/ansible-elastic, a clone of Elastic's no longer
+supported playbook, LIGHTLY updated for ES8 & Debian, external to this
+repo to further reduce temptation to change anything!!!
+
+It would be GREATLY preferable to use ONLY ansible to maintain
+the News Scribe cluster!!!
+
 ### make setup
 
 Create venv with ansible installed.
