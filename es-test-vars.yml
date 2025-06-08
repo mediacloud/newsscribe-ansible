@@ -11,6 +11,3 @@
    - debug: var=ansible_host
    - debug: var=ansible_hostname
    - debug: var=inventory_hostname
-
-   # https://stackoverflow.com/questions/40235550/how-to-inspect-a-json-response-from-ansible-uri-call
-

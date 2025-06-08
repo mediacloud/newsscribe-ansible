@@ -14,6 +14,13 @@
   tags:
   - es
 
+# after install-es
+- name: Check vm_max_map_count
+  ansible.builtin.include_tasks:
+    file: "vm_max_map_count.yml"
+  tags:
+  - vm_max_map
+
 - name: Include install-statsd-agent task
   ansible.builtin.include_tasks:
     file: "install-statsd-agent.yml"

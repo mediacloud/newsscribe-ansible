@@ -7,17 +7,17 @@ temptation to think that making changes is anything less than
 dangerous and terrifying!!
 
 To that end, it's as slim as possible, and tries to err on the side of
-simplicity and transparency rather than ansible "best practices"
-hiding things in playbooks and inventories directories.
+simplicity and transparency rather than ansible "best practices" with
+files spread across multiple directories (vars, playbooks, inventories).
 
 We regard ansible as a necessary evil for system provisioning, not as
 an end to itself!
 
-This repo uses mediacloud/ansible-elastic, a clone of Elastic's no
-longer supported playbook, LIGHTLY updated for ES8 & Debian, external
-to this repo to keep this repo as small/simple as possible, and
-FURTHER reduce temptation to change anything!!! (see "Development
-advice" section below).
+This repo uses mediacloud/ansible-elastic, a clone of a clone of
+Elastic's no longer supported playbook, LIGHTLY updated for ES8 &
+Debian, external to this repo to keep this repo as small/simple as
+possible, and FURTHER reduce temptation to change anything!!! (see
+"Development advice" section below).
 
 It would be *GREATLY* preferable to use *ONLY* ansible to do all
 configuration of the NewsScribe cluster (and these scripts install an
@@ -29,11 +29,11 @@ Create venv with ansible and molecule with docker extensions.
 
 ### make test
 
-Run molecule test (create four node ES cluster)
-(must be run as root, or maybe a user in the docker group).
+Run molecule test (create four node ES cluster using Docker);
+must be run as root, or maybe a user in the docker group.
 
-The only red output you should see are three WARNING messages for
-unused test steps at the start, and repeated at the end of the run.
+The only red output you should see are a few WARNING messages at the
+beginning and end.
 
 ### es-install.sh
 
@@ -62,17 +62,23 @@ See molecule/default/README.md for more info.
 
 ## Development advice
 
+These scripts make changes to servers that are a critical resource.
+If you're not even a little nervous about making changes, you're
+almost certainly hazardous.
+
 1. If you're installing/configuring something new, create
-   a new .yml file in the tasks directory and add it to all.yml
+   a new .yml file in the tasks directory and add it to all.yml.
+   You can test the task locally by (temporarily!) adding an include_task
+   to the end of es-test-vars.yml and running ./es-test-vars.yml
 2. Test often, checkpoint by commiting your changes, or
    saving files.  YAML is a hostile programming environment,
    and it's easy to break stuff.
 3. Use ansible `- debug: var=XXX` directives
    to check variable contents when debugging.
-4. ansible is a pain, and "debug" (see above) is your friend,
+4. ansible is always an opaque black box,
    but in this case, your ansible files are being run by
    ansible playbooks being run by molecule, so you're in
-   the deep end (a black box inside a black box).
+   a double black box!
 5. Keep it simple, avoid changes, don't be a hero.
 6. ALWAYS run "make test" (runs "molecule test")
    before opening a pull request, or pushing to
@@ -97,14 +103,14 @@ considering your changes tested.
 Should it be necessary to make a change to ansible-elasticsearch
 uncomment the line
 `#mc_es_ansible_elasticsearch_force_checkout_cleanup: false` in
-`molecule/default/vars.yml`: this will leave prevent removal or
+`molecule/default/vars.yml`: this will prevent removal or
 overwrite of the `molecule/default/tmp/ansible-elasticsearch` clone of
-the ansible-elasticsearch repo.  *DO NOT* commit this change to
-vars.yml!!!
+the ansible-elasticsearch repo, so you can develop changes in place.
+*DO NOT* commit this change to vars.yml!!!
 
 `ansible-elasticsearch` is being used as the least unpleasant solution
 for installing ES8.  It's being used in the LEAST modified form
-possible.  So it contains many steps that are no-ops, but have been
+possible, so it contains many steps that are no-ops, but have been
 left in place should someone else find the repo helpful, or in case we
 need them in the future.  The most likely case for a change is that
 some step needs to be disabled, in which case the polite thing to do
