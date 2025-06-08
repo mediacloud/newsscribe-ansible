@@ -57,26 +57,8 @@ molecule test and full install and runs on all remote nodes.
 
 ### molecule/default/ directory
 
-Ansible playbooks for molecule testing
-
-#### prepare.yml
-
-Runs locally, checks out ansible-elasticsearch repo.
-
-#### create.yml
-
-Runs locally, creates a docker network and docker containers for test
-nodes.  Containers run systemd to more fully simulate real servers.
-
-#### converge.yml
-
-Runs inside containers, includes `tasks/all.yml`
-
-#### destroy.yml
-
-Runs locally, before and after create/converge to clean up: stops and
-removes the docker containers, docker network, and checkout of
-ansible-elasticsearch repository.
+Ansible playbooks for molecule testing.
+See molecule/default/README.md for more info.
 
 ## Development advice
 
