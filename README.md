@@ -65,8 +65,8 @@ Runs locally, checks out ansible-elasticsearch repo.
 
 #### create.yml
 
-Runs locally, creates containers for test nodes.
-Containers run systemd to more fully simulate real servers.
+Runs locally, creates a docker network and docker containers for test
+nodes.  Containers run systemd to more fully simulate real servers.
 
 #### converge.yml
 
@@ -74,7 +74,9 @@ Runs inside containers, includes `tasks/all.yml`
 
 #### destroy.yml
 
-Runs locally, before and after create/converge.
+Runs locally, before and after create/converge to clean up: stops and
+removes the docker containers, docker network, and checkout of
+ansible-elasticsearch repository.
 
 ## Development advice
 
