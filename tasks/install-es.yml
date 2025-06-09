@@ -18,6 +18,9 @@
   ansible.builtin.file:
     path: /usr/share/man/man1
     state: directory
+    mode: '0755'
+    owner: root
+    group: root
 - name: Include ansible-elasticsearch role
   ansible.builtin.include_role:
     name: '{{ mc_es_ansible_elasticsearch }}'

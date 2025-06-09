@@ -1,0 +1,35 @@
+---
+# include_tasks file included by all.yml
+
+# Only/just disables swap as initially configured on es01-es08
+# (8GB /swap.img file)
+
+# NOTE! avoiding external ansible module dependency to keep it simple!
+
+# SHOULD be a noop when run inside Docker container, so run from all.yml
+- name: Remove swap.img from fstab
+  ansible.builtin.lineinfile:
+    path: /etc/fstab
+    regexp: ^/swap\.img\s
+    state: absent
+    backup: true
+- name: Check if swap.img currently active by looking in procfs
+  ansible.builtin.lineinfile:
+    path: /proc/swaps
+    regexp: ^/swap\.img\s
+    state: absent  # will register as "changed" if found
+  check_mode: true
+  register: swap_active
+
+# This will fail if container sees Docker host swaps.  To prevent
+# this, molecule/default/create.yml mounts an empty file over
+# /proc/swaps, all to avoid having an mc_docker variable that might
+# get used too often!!!
+- name: Disable current swap.img
+  ansible.builtin.shell:
+    cmd: swapoff /swap.img
+  when: swap_active.changed  # absent+check_mode found it
+- name: Remove /swap.img
+  ansible.builtin.file:
+    path: /swap.img
+    state: absent

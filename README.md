@@ -29,15 +29,25 @@ Create venv with ansible and molecule with docker extensions.
 
 ### make test
 
-Run molecule test (create four node ES cluster using Docker);
-must be run as root, or maybe a user in the docker group.
+Run `molecule test` (create four node ES cluster using Docker);
+must be run as root.
 
 The only red output you should see are a few WARNING messages at the
 beginning and end.
 
+There is no provision for per-user or staging realms:
+only one user can run tests on a given docker host system!
+
 ### es-install.sh
 
 Script to run ansible to install ES cluster, runs es-install.yml playbook.
+Passes any command line arguments to `ansible-playbook` command.
+
+Possible arguments for check before running: `--syntax-check`, `--check`, `--list-hosts`, `--list-tasks` (see https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html)
+
+When running for real, can specify `--verbose`.
+Also `--timeout` and/or `--tags`
+could possibly be helpful in a pinch.
 
 ### es-inventory.yml
 
@@ -66,6 +76,9 @@ These scripts make changes to servers that are a critical resource.
 If you're not even a little nervous about making changes, you're
 almost certainly hazardous.
 
+All locally added variables should start with mc_, ones related
+to elastic search should start with mc_es_
+
 1. If you're installing/configuring something new, create
    a new .yml file in the tasks directory and add it to all.yml.
    You can test the task locally by (temporarily!) adding an include_task
@@ -73,7 +86,7 @@ almost certainly hazardous.
 2. Test often, checkpoint by commiting your changes, or
    saving files.  YAML is a hostile programming environment,
    and it's easy to break stuff.
-3. Use ansible `- debug: var=XXX` directives
+3. You can use ansible `- debug: var=XXX` directives
    to check variable contents when debugging.
 4. ansible is always an opaque black box,
    but in this case, your ansible files are being run by
@@ -89,6 +102,9 @@ almost certainly hazardous.
    `venv/bin/ansible-inventory -i es-inventory.yml --list`
    will test the es-inventory.yml file.  This is where having
    a saved copy of known working files can be a life saver!
+8. When the choice is to do something simply vs handling
+   all/general cases via an external module, the choice was
+   to do the simple thing.
 
 When you need to do a post-mortem on a container, you can disable
 container destruction by running `molecule test --destroy=never`
@@ -106,7 +122,7 @@ uncomment the line
 `molecule/default/vars.yml`: this will prevent removal or
 overwrite of the `molecule/default/tmp/ansible-elasticsearch` clone of
 the ansible-elasticsearch repo, so you can develop changes in place.
-*DO NOT* commit this change to vars.yml!!!
+*DO NOT commit this change to vars.yml*!!!
 
 `ansible-elasticsearch` is being used as the least unpleasant solution
 for installing ES8.  It's being used in the LEAST modified form
@@ -119,3 +135,15 @@ add `es_some_new_variable: true` to
 `ansible-elasticsearch/vars/main.yml` and add `es_some_new_variable:
 false` to `newsscribe-ansible/es-vars.yml` (ie; see `es_certificates`,
 which was disabled because it didn't run as-is under molecule).
+
+This repo has a pre-commit hook, installed by `make setup`' it runs
+checks to remove end-of-line whitespace, mising end-of-file newlines,
+basic yaml checks, and `yamlfix` to try to keep the files consistently
+formatted.  `yaml-lint` would be nice, but doesn't seem to handle vars
+files (es-vars.yml and molecule/default/vars.yml intermixed with
+playbooks), *BUT* if you want to be a good citizen, running it may
+give you helpful hints (fully-qualified module names).
+
+There *INTENTIONALLY* isn't a variable that says whether you're
+running under Docker or not because of the temptation to check it
+often, which would undermine the whole point of testing under Docker!!!

@@ -4,7 +4,10 @@
 # PLEASE KEEP IN SORTED ORDER!
 es_heap_size: 1g
 
-################ mc_es_xxx: override defaults
+################ mc_es_xxx
+
+# mostly overrides to ansible-elasticsearch defaults
+# and values for es_config
 mc_es_cluster_name: test_cluster
 
 # force cluster initialization!
@@ -34,12 +37,9 @@ mc_es_seed_hosts:
 #   host for Ansible controllers or within the Molecule
 #   create/converge/test cycle."
 mc_image: trfore/docker-ubuntu2404-systemd
-
-# mc_image_command: "sh -c \"while true; do sleep 10000; done\""
-# mc_image_command: "/usr/sbin/init"  #  symlink to systemd
 mc_image_command: /lib/systemd/systemd
 
-# ansible network to connect containers:
+# Docker network to connect molecule containers to:
 mc_network_name: newsscribe-molecule-test  # used in create, destroy
 
 # PLEASE KEEP IN SORTED ORDER!

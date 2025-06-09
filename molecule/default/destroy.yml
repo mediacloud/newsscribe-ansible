@@ -33,7 +33,7 @@
         state: absent
       with_items: '{{ molecule_yml.platforms }}'
     - name: Remove docker network
-      docker_network:
+      community.docker.docker_network:
         name: '{{ mc_network_name }}'
         state: absent
     - name: Remove temp files

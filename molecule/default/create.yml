@@ -5,16 +5,42 @@
   gather_facts: false
   # no_log: "{{ not lookup('env', 'MOLECULE_DEBUG') | bool }}"
   tasks:
+    - name: Include es-vars.yml
+      ansible.builtin.include_vars:
+        file: ../../es-vars.yml
+    # after, to allow es-vars override
     - name: Include vars.yml
       ansible.builtin.include_vars:
         file: vars.yml
-
-    # if needed, create Dockerfile from a Dockerfile.j2 template,
-    # and build docker image
     - name: Create docker network
-      docker_network:
+      community.docker.docker_network:
         name: '{{ mc_network_name }}'
         state: present
+
+    # considerable pain here to create an empty file and get its full
+    # path to mount over /proc/swaps to avoid creating a variable
+    # (that would be dangerously tempting to use) that signifies to
+    # disable-swap.yml that it shouldn't try to "swapoff /swap.img"!!!
+    - name: Create tmp directory
+      ansible.builtin.file:
+        path: '{{ mc_tmp }}'
+        state: directory
+        mode: 755
+        owner: root
+        group: root
+    - name: Get full path of tmp directory for volume mount
+      ansible.builtin.shell:
+        cmd: cd tmp; pwd
+      register: tmp_path
+
+    # create an empty file in local tmp directory to hide /proc/swaps
+    - name: Create empty tmp file
+      ansible.builtin.copy:
+        content: ''
+        dest: '{{ mc_tmp }}/empty'
+        group: root
+        owner: root
+        mode: 0444
 
     # https://github.com/ansible/molecule/issues/1159#issuecomment-371758925
     # has example docker_container taking data from platforms dict list
@@ -34,6 +60,7 @@
         log_driver: json-file
         volumes:
           - /sys/fs/cgroup:/sys/fs/cgroup:rw  # for systemd
+          - '{{ tmp_path.stdout }}/empty:/proc/swaps:ro'  # hide host swaps!
           # _COULD_ mount a per-server /data volume
           # w/ local directory based on item.name to persist data
         networks:
@@ -46,7 +73,7 @@
     # [*] https://www.jeffgeerling.com/blog/2022/docker-and-systemd-getting-rid-dreaded-failed-connect-bus-error
     # (also requires dbus to be installed)
     - name: Wait for instance(s) creation to complete
-      async_status:
+      ansible.builtin.async_status:
         jid: '{{ item.ansible_job_id }}'
       register: docker_jobs
       until: docker_jobs.finished

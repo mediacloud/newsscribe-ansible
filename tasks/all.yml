@@ -1,22 +1,35 @@
 ---
-# include_tasks file: included by molecule/default/converge.yml and
-# ADD NEW TASKS TO THIS FILE via include_tasks!!
+# include_tasks file:
+# included by molecule/default/converge.yml and es-install.yml
+# "all" in the sense "run in all environments"
+
+# NOTE! "include_tasks" file paths in this file are relative to this
+# file, which allows it to work when included from es-install.yml and
+# molecule/default/converge.yml!!!
+
+# Add new tasks to this file ONLY via include_tasks, and ADD TAGS!
+- name: Disable swap
+  ansible.builtin.include_tasks:
+    file: disable-swap.yml
+  tags: [swap, system]
 - name: Include create-motd task
   ansible.builtin.include_tasks:
     file: create-motd.yml
-  tags: [motd]
+  tags: [motd, system]
 - name: Include install-es task
   ansible.builtin.include_tasks:
     file: install-es.yml
-  tags:
-    - es
+  tags: [es]
 
 # after install-es
 - name: Check vm_max_map_count
   ansible.builtin.include_tasks:
     file: vm_max_map_count.yml
-  tags: [vm_max_map]
+  tags: [vm_max_map, system]
 - name: Include install-statsd-agent task
   ansible.builtin.include_tasks:
     file: install-statsd-agent.yml
   tags: [stats]
+
+# add new lines above this comment!
+# Add new tasks to this file ONLY via include_tasks, and ADD TAGS!
