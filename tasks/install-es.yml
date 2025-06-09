@@ -1,16 +1,16 @@
+---
 # include_task file, included by tasks/all.yml
 
 # run role from ansible-elasticsearch repo checked out by
 # tasks/get-ansible-elasticsearch.yml
-
 - name: Install packages
   ansible.builtin.apt:
     pkg:
-    - dbus # for systemctl/systemd
-    - gpg # for ES repo key
-    - gpg-agent # for "apt-key add" for repo key
-    #- unzip # for certs
-    cache_valid_time: 86400 # 1 day
+      - dbus  # for systemctl/systemd
+      - gpg  # for ES repo key
+      - gpg-agent  # for "apt-key add" for repo key
+    #- unzip  # for certs
+    cache_valid_time: 86400  # 1 day
 
 # man pages not installed in containers!
 # install fails without man1 directory!
@@ -18,7 +18,6 @@
   ansible.builtin.file:
     path: /usr/share/man/man1
     state: directory
-
 - name: Include ansible-elasticsearch role
   ansible.builtin.include_role:
-    name: "{{ mc_es_ansible_elasticsearch }}"
+    name: '{{ mc_es_ansible_elasticsearch }}'

@@ -1,13 +1,13 @@
+---
 - name: Playbook to test es-inventory and es-vars settings
-  vars_files:
-   - es-vars.yml
+  vars_files: [es-vars.yml]
   hosts: local
   tasks:
-   - debug: var=mc_es_master
-   - debug: var=mc_es_seed_hosts
-   - debug: var=es_config # shows values appended to /etc/elastic.../elasticsearch.yml
-   - debug: var=ansible_all_ipv4_addresses
-   - debug: var=ansible_default_ipv4
-   - debug: var=ansible_host
-   - debug: var=ansible_hostname
-   - debug: var=inventory_hostname
+    - debug: var=mc_es_master
+    - debug: var=mc_es_seed_hosts
+    - debug: var=es_config  # shows values appended to /etc/elastic.../elasticsearch.yml
+    - debug: var=ansible_all_ipv4_addresses
+    - debug: var=ansible_default_ipv4
+    - debug: var=ansible_host
+    - debug: var=ansible_hostname
+    - debug: var=inventory_hostname

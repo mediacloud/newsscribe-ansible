@@ -2,9 +2,8 @@
 - name: Playbook to install/configure newsscribe cluster servers
   hosts: all
   vars_files:
-   - es-vars.yml # NOTE! overrides vars from es-inventory.yml
-
+    - es-vars.yml  # NOTE! overrides vars from es-inventory.yml
   tasks:
-   - name: Include tasks/all
-     ansible.builtin.include_tasks:
-       file: "tasks/all.yml"
+    - name: Include tasks/all
+      ansible.builtin.include_tasks:
+        file: tasks/all.yml

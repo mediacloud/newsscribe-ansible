@@ -1,27 +1,26 @@
 ---
 - name: Converge
   hosts: all
-  gather_facts: true # for ansible_ vars used by ansible-elasticsearch
+  gather_facts: true  # for ansible_ vars used by ansible-elasticsearch
   tasks:
     - name: Include top level es-vars.yml
       ansible.builtin.include_vars:
-        file: "../../es-vars.yml"
+        file: ../../es-vars.yml
 
     # after es-vars to allow override
     - name: Include molecule vars.yml
       ansible.builtin.include_vars:
-        file: "vars.yml"
-
+        file: vars.yml
     - name: Include tasks/all.yml
       ansible.builtin.include_tasks:
-        file: "../../tasks/all.yml"
+        file: ../../tasks/all.yml
 
     # XXX run from "verify" stage?! from what node??
     - name: Check cluster status is green
       uri:
         url: http://localhost:{{mc_es_http_port}}/_cluster/stats
         method: GET
-        return_content: yes
+        return_content: true
         status_code: 200
       register: result
       until: result.json.status == "green"

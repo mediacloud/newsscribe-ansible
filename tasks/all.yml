@@ -1,28 +1,22 @@
 ---
 # include_tasks file: included by molecule/default/converge.yml and
 # ADD NEW TASKS TO THIS FILE via include_tasks!!
-
 - name: Include create-motd task
   ansible.builtin.include_tasks:
-    file: "create-motd.yml"
-  tags:
-  - motd
-
+    file: create-motd.yml
+  tags: [motd]
 - name: Include install-es task
   ansible.builtin.include_tasks:
-    file: "install-es.yml"
+    file: install-es.yml
   tags:
-  - es
+    - es
 
 # after install-es
 - name: Check vm_max_map_count
   ansible.builtin.include_tasks:
-    file: "vm_max_map_count.yml"
-  tags:
-  - vm_max_map
-
+    file: vm_max_map_count.yml
+  tags: [vm_max_map]
 - name: Include install-statsd-agent task
   ansible.builtin.include_tasks:
-    file: "install-statsd-agent.yml"
-  tags:
-  - stats
+    file: install-statsd-agent.yml
+  tags: [stats]

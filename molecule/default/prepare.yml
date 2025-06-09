@@ -11,11 +11,9 @@
     - name: Include es-vars.yml
       ansible.builtin.include_vars:
         file: ../../es-vars.yml
-
     - name: Include vars.yml
       ansible.builtin.include_vars:
         file: vars.yml
-
     - name: Get ansible-elasticsearch
       ansible.builtin.include_tasks:
-        file: "../../tasks/get-ansible-elasticsearch.yml"
+        file: ../../tasks/get-ansible-elasticsearch.yml

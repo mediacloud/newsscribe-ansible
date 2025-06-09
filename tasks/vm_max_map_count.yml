@@ -5,22 +5,20 @@
 
 # No doubt this could be done "more cleanly" using pure ansible,
 # but just trying to get the job done, so using awk
-
 - name: Install packages for vm_max_map_count check
   ansible.builtin.apt:
     pkg:
-      - gawk # needed for test in docker container
-
+      - gawk  # needed for test in docker container
 - name: Check /etc/sysctl.d/*.conf
-  shell: awk -F= 'BEGIN { n=0 } $1 == "vm.max_map_count" { n=$2 } END { print n }' /etc/sysctl.d/*.conf || echo 0
-  changed_when: false # "never changes", for idempotency testing
+  shell: awk -F= 'BEGIN { n=0 } $1 == "vm.max_map_count" { n=$2 } END { print n
+    }' /etc/sysctl.d/*.conf || echo 0
+  changed_when: false  # "never changes", for idempotency testing
   register: system
-
 - name: Check /usr/lib/sysctl.d/elasticsearch.conf
-  shell: awk -F= 'BEGIN { n=0 } $1 == "vm.max_map_count" { n=$2 } END { print n }' /usr/lib/sysctl.d/elasticsearch.conf || echo 0
+  shell: awk -F= 'BEGIN { n=0 } $1 == "vm.max_map_count" { n=$2 } END { print n
+    }' /usr/lib/sysctl.d/elasticsearch.conf || echo 0
   changed_when: false  # "never changes", for idempotency testing
   register: elastic
-
 - name: Remove ES supplied /usr/lib/sysctl.d/elasticsearch.conf
   file:
     path: /usr/lib/sysctl.d/elasticsearch.conf

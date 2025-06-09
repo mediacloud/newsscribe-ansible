@@ -12,7 +12,6 @@
 # "molecule test" the old containers will be left in place which may
 # confound your tests, so always run a clean "make test"
 # (or "molecule test") before 
-
 - name: Destroy
   hosts: localhost
   connection: local
@@ -22,26 +21,23 @@
   tasks:
     - name: Include top level es-vars.yml
       ansible.builtin.include_vars:
-        file: "../../es-vars.yml"
+        file: ../../es-vars.yml
 
     # after es-vars to allow override
     - name: Include vars.yml
       ansible.builtin.include_vars:
         file: vars.yml
-
     - name: Remove docker containers
       community.docker.docker_container:
-        name: "{{ item.name }}"
+        name: '{{ item.name }}'
         state: absent
-      with_items: "{{ molecule_yml.platforms }}"
-
+      with_items: '{{ molecule_yml.platforms }}'
     - name: Remove docker network
       docker_network:
-        name: "{{ mc_network_name }}"
+        name: '{{ mc_network_name }}'
         state: absent
-
     - name: Remove temp files
       ansible.builtin.file:
-        path: "{{ mc_tmp }}"
+        path: '{{ mc_tmp }}'
         state: absent
       when: mc_es_ansible_elasticsearch_force_checkout_cleanup

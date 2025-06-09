@@ -2,5 +2,5 @@ ansible
 jmespath
 molecule
 molecule-plugins[docker]
+pre-commit
 six
-#yamllint

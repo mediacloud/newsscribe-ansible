@@ -6,7 +6,6 @@
 # making an argument taking role to do the work unless/until a playbook
 # to re-create the web server (web-search, rss-fetcher, grafana)
 # is desired.
-
 - name: Install packages for server monitoring agent
   ansible.builtin.apt:
     pkg:

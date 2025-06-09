@@ -1,11 +1,9 @@
 ---
 driver:
   name: docker
-
 # UGH! Force addrs, so containers easily accessible outside docker
 # see also mc_ipv4_subnet in vars.yml
 # (trying {{mc_ipv4_prefix}}.n below failed)
-
 # ALSO: names also in mc_es_seed_hosts in vars.yml
 # WISH: generate mc_es_seed_hosts using a property added below!!
 platforms:
