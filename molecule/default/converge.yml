@@ -15,7 +15,10 @@
       ansible.builtin.include_tasks:
         file: ../../tasks/all.yml
 
-    # XXX run from "verify" stage?! from what node??
+    # NOTE! runs on all nodes!
+    # run from "verify" stage, on just one node?
+    # Also try storing document and retrieving??
+    # (take advantage of index autocreate??)
     - name: Check cluster status is green
       uri:
         url: http://localhost:{{mc_es_http_port}}/_cluster/stats
@@ -26,6 +29,3 @@
       until: result.json.status == "green"
       retries: 100
       delay: 2
-
-    # XXX also try storing document and retrieving??
-    # (take advantage of index autocreate??)
