@@ -11,7 +11,7 @@
 # ***BUT*** if you don't run "molecule destroy" before the next
 # "molecule test" the old containers will be left in place which may
 # confound your tests, so always run a clean "make test"
-# (or "molecule test") before 
+# (or "molecule test") before
 - name: Destroy
   hosts: localhost
   connection: local
