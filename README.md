@@ -41,13 +41,8 @@ only one user can run tests on a given docker host system!
 ### es-install.sh
 
 Script to run ansible to install ES cluster, runs es-install.yml playbook.
-Passes any command line arguments to `ansible-playbook` command.
 
-Possible arguments for check before running: `--syntax-check`, `--check`, `--list-hosts`, `--list-tasks` (see https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html)
-
-When running for real, can specify `--verbose`.
-Also `--timeout` and/or `--tags`
-could possibly be helpful in a pinch.
+Must be run on a clean checkout of the `prod` branch.
 
 ### es-inventory.yml
 

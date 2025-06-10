@@ -1,6 +1,6 @@
 #!/bin/sh
 
-DEBUG=1
+#DEBUG=1
 if [ "$xDEBUG" != x ]; then
     fatal() {
 	echo debug: continuing
@@ -54,7 +54,11 @@ if ! git diff --quiet $UPSTREAM/prod; then
     fatal
 fi
 
-# XXX "git push --dry-run" to test for write permission (pushing tag)?
+echo 'checking push (for tagging)'
+if ! git push --dry-run; then
+    echo push test failed 1>&2
+    fatal
+fi
 
 TMP=$(awk '/mc_tmp:/ { print $2 }' es-vars.yml)
 if [ -d tmp ]; then
@@ -72,9 +76,9 @@ if ! git clone $ANSIBLE_ELASTIC_REPO; then
 fi
 quit_if_debug
 
-TAG=${UNAME}-$(date '%Y-%m-%d-%H-%M-%S')
+TAG=success-$(date '%Y-%m-%d-%H-%M-%S')-${UNAME}
 # run es-install.yml playbook:
-if sudo venv/bin/ansible-playbook -i es-inventory.yml $* es-install.yml; then
+if sudo venv/bin/ansible-playbook -i es-inventory.yml es-install.yml; then
     echo "SUCCESS!! applying tag $TAG and pushing to $ORIGIN"
     git tag $TAG
     git push $ORIGIN $TAG
