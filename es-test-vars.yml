@@ -3,19 +3,27 @@
   vars_files: [es-vars.yml]
   hosts: local
   tasks:
-    - ansible.builtin.debug:
+    - name: Yadda
+      ansible.builtin.debug:
         var: mc_es_master
-    - ansible.builtin.debug:
+    - name: Yadda
+      ansible.builtin.debug:
         var: mc_es_seed_hosts
-    - ansible.builtin.debug:
+    - name: Yadda
+      ansible.builtin.debug:
         var: es_config
-    - ansible.builtin.debug:
+    - name: Yadda
+      ansible.builtin.debug:
         var: ansible_all_ipv4_addresses
-    - ansible.builtin.debug:
+    - name: Yadda
+      ansible.builtin.debug:
         var: ansible_default_ipv4
-    - ansible.builtin.debug:
+    - name: Yadda
+      ansible.builtin.debug:
         var: ansible_host
-    - ansible.builtin.debug:
+    - name: Yadda
+      ansible.builtin.debug:
         var: ansible_hostname
-    - ansible.builtin.debug:
+    - name: Yadda
+      ansible.builtin.debug:
         var: inventory_hostname

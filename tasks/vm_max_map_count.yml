@@ -8,15 +8,20 @@
   ansible.builtin.apt:
     pkg:
       - gawk  # needed for test in docker container
-# needs shell for wildcard:
+# needs shell for wildcard and ||
 - name: vm_max_map_count | Check /etc/sysctl.d/*.conf
-  ansible.builtin.shell: awk -F= 'BEGIN { n=0 } $1 == "vm.max_map_count" { n=$2
-    } END { print n }' /etc/sysctl.d/*.conf || echo 0
+  ansible.builtin.shell: |
+    awk -F= 'BEGIN { n=0 }
+    $1 == "vm.max_map_count" { n=$2 }
+    END { print n }' /etc/sysctl.d/*.conf || echo 0
   changed_when: false  # "never changes", for idempotency testing
   register: system
+# needs shell for ||
 - name: vm_max_map_count | Check /usr/lib/sysctl.d/elasticsearch.conf
-  ansible.builtin.command: awk -F= 'BEGIN { n=0 } $1 == "vm.max_map_count" { n=$2
-    } END { print n }' /usr/lib/sysctl.d/elasticsearch.conf || echo 0
+  ansible.builtin.shell: |
+    awk -F= 'BEGIN { n=0 }
+    $1 == "vm.max_map_count" { n=$2 }
+    END { print n }' /usr/lib/sysctl.d/elasticsearch.conf || echo 0
   changed_when: false  # "never changes", for idempotency testing
   register: elastic
 - name: vm_max_map_count | Remove ES supplied /usr/lib/sysctl.d/elasticsearch.conf
@@ -31,3 +36,4 @@
     name: systemd-sysctl.service
     state: restarted
   when: es_conf_removed.changed
+  tags: [skip_ansible_lint]

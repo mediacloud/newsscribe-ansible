@@ -1,0 +1,20 @@
+---
+# profile: null  # min, basic, moderate, safety, shared, production
+profile: production
+exclude_paths:
+  - tmp  # pay no attention to the role behind the curtain
+  - molecule/default/tmp  # this is not the directory you're looking for
+kinds:
+  - yaml: vars.yml
+  - yaml: '**/molecule/*/vars.yml'
+  - inventory: es*inventory.yml
+  - playbook: es-clone-repos.yml
+  - playbook: es-install.yml
+  - playbook: es-test-vars.yml
+enable_list:
+  - args
+  - empty-string-compare  # opt-in
+  - no-log-password  # opt-in
+  - no-same-owner  # opt-in
+  - name[prefix]  # opt-in
+  - galaxy-version-incorrect  # opt-in

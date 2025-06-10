@@ -9,3 +9,4 @@
     dest: '{{ mc_es_ansible_elasticsearch }}'
     force: '{{ mc_es_ansible_elasticsearch_force_checkout_cleanup }}'
     update: '{{ mc_es_ansible_elasticsearch_force_checkout_cleanup }}'
+  tags: [skip_ansible_lint]

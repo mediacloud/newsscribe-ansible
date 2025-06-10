@@ -16,7 +16,6 @@
       community.docker.docker_network:
         name: '{{ mc_network_name }}'
         state: present
-
     # considerable pain here to create an empty file and get its full
     # path to mount over /proc/swaps to avoid creating a variable
     # (that would be dangerously tempting to use) that signifies to

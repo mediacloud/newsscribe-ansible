@@ -13,3 +13,14 @@ repos:
     rev: 1.17.0
     hooks:
       - id: yamlfix
+
+  # after things that change file formatting
+  # https://blog.42mate.com/installing-and-using-pre-commit-with-ansible-lint/
+  - repo: https://github.com/ansible/ansible-lint.git
+    rev: v25.5.0
+    hooks:
+      - id: ansible-lint
+        files: \.(yaml|yml)$
+        entry: ./.pre-commit-run.sh ansible-lint
+        verbose: true
+        args: [-p, --nocolor, -c, .ansible-lint.yml]

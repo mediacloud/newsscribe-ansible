@@ -1,1 +1,5 @@
+*~
+.pre-commit-run.sh.log
+molecule/default/tmp
+tmp
 venv
