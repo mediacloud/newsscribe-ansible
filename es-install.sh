@@ -23,14 +23,12 @@ if [ "x$UNAME" = xroot ]; then
    fatal
 fi
 
-# TEMP!!! replace philbudne with mediacloud!!!
-UPSTREAM=$(git remote -v | awk '/git@github.com:philbudne\/newsscribe-ansible.git/ { print $1; exit }')
+UPSTREAM=$(git remote -v | awk '/git@github.com:mediacloud\/newsscribe-ansible.git/ { print $1; exit }')
 if [ "x$UPSTREAM" = x ]; then
-    echo no upstream remote found 1>&2
+    echo no mediacloud ssh remote found 1>&2
     fatal
 fi
-echo upstream repo $UPSTREAM
-git remote get-url $UPSTREAM
+echo upstream repo $UPSTREAM $(git remote get-url $UPSTREAM)
 
 BRANCH=$(git branch --show-current)
 if [ "x$BRANCH" != prod ]; then
