@@ -26,7 +26,7 @@
 # /proc/swaps, all to avoid having an mc_docker variable that might
 # get used too often!!!
 - name: Disable current swap.img
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: swapoff /swap.img
   when: swap_active.changed  # absent+check_mode found it
 - name: Remove /swap.img

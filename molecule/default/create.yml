@@ -25,13 +25,14 @@
       ansible.builtin.file:
         path: '{{ mc_tmp }}'
         state: directory
-        mode: 755
+        mode: '0755'
         owner: root
         group: root
     - name: Get full path of tmp directory for volume mount
       ansible.builtin.shell:
         cmd: cd tmp; pwd
       register: tmp_path
+      changed_when: false
 
     # create an empty file in local tmp directory to hide /proc/swaps
     - name: Create empty tmp file
@@ -40,7 +41,7 @@
         dest: '{{ mc_tmp }}/empty'
         group: root
         owner: root
-        mode: 0444
+        mode: '0444'
 
     # https://github.com/ansible/molecule/issues/1159#issuecomment-371758925
     # has example docker_container taking data from platforms dict list

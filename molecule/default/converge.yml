@@ -21,7 +21,7 @@
     # (take advantage of index autocreate??)
     - name: Check cluster status is green
       ansible.builtin.uri:
-        url: http://localhost:{{mc_es_http_port}}/_cluster/health
+        url: http://localhost:{{ mc_es_http_port }}/_cluster/health
         method: GET
         return_content: true
         status_code: 200

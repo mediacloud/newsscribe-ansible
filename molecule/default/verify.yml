@@ -12,36 +12,37 @@
       ansible.builtin.include_vars:
         file: vars.yml
 
-    # get something unique to this invocation
-    - name: get date
-      ansible.builtin.shell:
+    # get something unique to this run
+    - name: Get unique string
+      ansible.builtin.command:
         cmd: date "+%F %T"
       register: unique
-
-    # POST + /_create/ID will fail with 409 if document exists
-    - name: send a store document request to each server
+      changed_when: false
+    - name: Send a store document request to each server
       ansible.builtin.uri:
-        url: http://{{item.name}}:{{mc_es_http_port}}/test-index/_doc/{{ansible_hostname}}-{{item.name}}
+        url: http://{{ item.name }}:{{ mc_es_http_port }}/test-index/_doc/{{ ansible_hostname
+          }}-{{ item.name }}
         method: POST
         status_code: 200,201
         body_format: json
         body:
-          from: '{{ansible_hostname}}'
-          to: '{{item.name}}'
-          unique: '{{unique.stdout}}'
+          from: '{{ ansible_hostname }}'
+          to: '{{ item.name }}'
+          unique: '{{ unique.stdout }}'
       with_items: '{{ molecule_yml.platforms }}'
       loop_control:
         label: '{{ item.name }}'
-    - name: retrieve all documents using localhost
+    - name: Retrieve all documents using localhost
       ansible.builtin.uri:
-        url: http://localhost:{{mc_es_http_port}}/test-index/_doc/{{ansible_hostname}}-{{item.name}}
+        url: http://localhost:{{ mc_es_http_port }}/test-index/_doc/{{ ansible_hostname
+          }}-{{ item.name }}
         method: GET
         status_code: 200
-      register: gets
+      register: documents
       with_items: '{{ molecule_yml.platforms }}'
       loop_control:
         label: '{{ item.name }}'
-    - name: validate retrieved documents
+    - name: Validate retrieved documents
       ansible.builtin.assert:
         quiet: true
         that:
@@ -53,7 +54,7 @@
           - item.json._id == ansible_hostname ~ "-" ~ item.item.name
         fail_msg: 'Unexpected item: {{ item }}'
         success_msg: OK
-      loop: '{{gets.results}}'
+      loop: '{{ documents.results }}'
       loop_control:
         label: '{{ item.item.name }}'
 
