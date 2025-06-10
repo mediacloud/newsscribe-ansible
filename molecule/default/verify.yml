@@ -1,0 +1,60 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: true  # for ansible_ vars used by ansible-elasticsearch
+  tasks:
+    - name: Include top level es-vars.yml
+      ansible.builtin.include_vars:
+        file: ../../es-vars.yml
+
+    # after es-vars to allow override
+    - name: Include molecule vars.yml
+      ansible.builtin.include_vars:
+        file: vars.yml
+
+    # get something unique to this invocation
+    - name: get date
+      ansible.builtin.shell:
+        cmd: date "+%F %T"
+      register: unique
+
+    # POST + /_create/ID will fail with 409 if document exists
+    - name: send a store document request to each server
+      ansible.builtin.uri:
+        url: http://{{item.name}}:{{mc_es_http_port}}/test-index/_doc/{{ansible_hostname}}-{{item.name}}
+        method: POST
+        status_code: 200,201
+        body_format: json
+        body:
+          from: '{{ansible_hostname}}'
+          to: '{{item.name}}'
+          unique: '{{unique.stdout}}'
+      with_items: '{{ molecule_yml.platforms }}'
+      loop_control:
+        label: '{{ item.name }}'
+    - name: retrieve all documents using localhost
+      ansible.builtin.uri:
+        url: http://localhost:{{mc_es_http_port}}/test-index/_doc/{{ansible_hostname}}-{{item.name}}
+        method: GET
+        status_code: 200
+      register: gets
+      with_items: '{{ molecule_yml.platforms }}'
+      loop_control:
+        label: '{{ item.name }}'
+    - name: validate retrieved documents
+      ansible.builtin.assert:
+        quiet: true
+        that:
+          - item.json.found
+          - item.json._index == "test-index"
+          - item.json._source.unique == unique.stdout
+          - item.json._source.from == ansible_hostname
+          - item.json._source.to == item.item.name  # item.item from GET loop
+          - item.json._id == ansible_hostname ~ "-" ~ item.item.name
+        fail_msg: 'Unexpected item: {{ item }}'
+        success_msg: OK
+      loop: '{{gets.results}}'
+      loop_control:
+        label: '{{ item.item.name }}'
+
+    # try lookups by field value??
