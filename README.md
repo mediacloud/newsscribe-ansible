@@ -134,10 +134,7 @@ which was disabled because it didn't run as-is under molecule).
 This repo has a pre-commit hook, installed by `make setup`' it runs
 checks to remove end-of-line whitespace, mising end-of-file newlines,
 basic yaml checks, and `yamlfix` to try to keep the files consistently
-formatted.  `yaml-lint` would be nice, but doesn't seem to handle vars
-files (es-vars.yml and molecule/default/vars.yml intermixed with
-playbooks), *BUT* if you want to be a good citizen, running it may
-give you helpful hints (fully-qualified module names).
+formatted, and `ansible-lint` set to "production" criteria.
 
 There *INTENTIONALLY* isn't a variable that says whether you're
 running under Docker or not because of the temptation to check it
