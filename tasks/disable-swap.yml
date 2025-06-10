@@ -7,13 +7,13 @@
 # NOTE! avoiding external ansible module dependency to keep it simple!
 
 # SHOULD be a noop when run inside Docker container, so run from all.yml
-- name: Remove swap.img from fstab
+- name: disable-swap | Remove swap.img from fstab
   ansible.builtin.lineinfile:
     path: /etc/fstab
     regexp: ^/swap\.img\s
     state: absent
     backup: true
-- name: Check if swap.img currently active by looking in procfs
+- name: disable-swap | Check if swap.img currently active by looking in procfs
   ansible.builtin.lineinfile:
     path: /proc/swaps
     regexp: ^/swap\.img\s
@@ -25,11 +25,11 @@
 # this, molecule/default/create.yml mounts an empty file over
 # /proc/swaps, all to avoid having an mc_docker variable that might
 # get used too often!!!
-- name: Disable current swap.img
+- name: disable-swap | Disable current swap.img
   ansible.builtin.command:
     cmd: swapoff /swap.img
   when: swap_active.changed  # absent+check_mode found it
-- name: Remove /swap.img
+- name: disable-swap | Remove /swap.img
   ansible.builtin.file:
     path: /swap.img
     state: absent

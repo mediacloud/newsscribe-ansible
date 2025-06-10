@@ -3,7 +3,7 @@
 
 # run role from ansible-elasticsearch repo checked out by
 # tasks/get-ansible-elasticsearch.yml
-- name: Install packages
+- name: install-es | Install packages
   ansible.builtin.apt:
     pkg:
       - dbus  # for systemctl/systemd
@@ -14,13 +14,13 @@
 
 # man pages not installed in containers!
 # install fails without man1 directory!
-- name: Check man1 directory
+- name: install-es | Check man1 directory
   ansible.builtin.file:
     path: /usr/share/man/man1
     state: directory
     mode: '0755'
     owner: root
     group: root
-- name: Include ansible-elasticsearch role
+- name: install-es | Include ansible-elasticsearch role
   ansible.builtin.include_role:
     name: '{{ mc_es_ansible_elasticsearch }}'

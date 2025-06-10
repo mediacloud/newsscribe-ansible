@@ -3,7 +3,7 @@
 # must be run locally (on host running ansible)
 # included by molecule/default/prepare.yml
 # (and yet to be created local pre-playbook)
-- name: Clone/update mediacloud/ansible-elasticsearch
+- name: get-ansible-elasticsearch | Clone/update mediacloud/ansible-elasticsearch
   ansible.builtin.git:
     repo: '{{ mc_es_ansible_elasticsearch_repo }}'
     dest: '{{ mc_es_ansible_elasticsearch }}'

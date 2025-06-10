@@ -1,6 +1,6 @@
 ---
 # include_tasks file included by all.yml
-- name: Creating motd
+- name: create-motd | Create file
   ansible.builtin.copy:
     dest: /etc/motd
     mode: '0644'

@@ -6,7 +6,7 @@
 # making an argument taking role to do the work unless/until a playbook
 # to re-create the web server (web-search, rss-fetcher, grafana)
 # is desired.
-- name: Install packages for server monitoring agent
+- name: install-statsd-agent | Install packages for server monitoring agent
   ansible.builtin.apt:
     pkg:
       - git
@@ -21,7 +21,7 @@
 # NOTE! command failure(s) not detected!!!
 # should re-write using ansible to do as much as possible!
 # ie; ansible.builtin.git??
-- name: Install server monitoring agent
+- name: install-statsd-agent | Install server monitoring agent
   ansible.builtin.command:
     cmd: /bin/sh
     stdin: |
