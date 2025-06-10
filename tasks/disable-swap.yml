@@ -29,9 +29,7 @@
   ansible.builtin.command:
     cmd: swapoff /swap.img
   when: swap_active.changed  # absent+check_mode found it
-  tags: [skip_ansible_lint]
 - name: disable-swap | Remove /swap.img
   ansible.builtin.file:
     path: /swap.img
     state: absent
-  tags: [skip_ansible_lint]

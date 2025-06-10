@@ -36,4 +36,3 @@
     name: systemd-sysctl.service
     state: restarted
   when: es_conf_removed.changed
-  tags: [skip_ansible_lint]

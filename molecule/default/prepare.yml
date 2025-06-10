@@ -14,6 +14,9 @@
     - name: Include vars.yml
       ansible.builtin.include_vars:
         file: vars.yml
-    - name: Get ansible-elasticsearch
-      ansible.builtin.include_tasks:
-        file: ../../tasks/get-ansible-elasticsearch.yml
+    - name: Clone/update mediacloud/ansible-elasticsearch
+      ansible.builtin.git:
+        repo: '{{ mc_es_ansible_elasticsearch_repo }}'
+        dest: '{{ mc_es_ansible_elasticsearch }}'
+        force: '{{ mc_es_ansible_elasticsearch_force_checkout_cleanup }}'
+        update: '{{ mc_es_ansible_elasticsearch_force_checkout_cleanup }}'

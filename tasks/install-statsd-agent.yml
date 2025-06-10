@@ -15,9 +15,7 @@
       - python3.12-venv
       # please add new packages above
       # in alphabetical order to avoid dups!
-    state: latest
     update_cache: true
-  tags: [skip_ansible_lint]
 
 # NOTE! command failure(s) not detected!!!
 # should re-write using ansible to do as much as possible!

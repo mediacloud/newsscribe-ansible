@@ -18,3 +18,7 @@ enable_list:
   - no-same-owner  # opt-in
   - name[prefix]  # opt-in
   - galaxy-version-incorrect  # opt-in
+skip_list:
+  - no-handler  # allow when outside handler
+  - no-changed-when  # allow "changed" state
+  - latest[git]  # allow checkout of latest rev
