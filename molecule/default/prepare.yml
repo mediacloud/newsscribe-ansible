@@ -16,7 +16,8 @@
         file: vars.yml
     - name: Clone/update mediacloud/ansible-elasticsearch
       ansible.builtin.git:
-        repo: '{{ mc_es_ansible_elasticsearch_repo }}'
+        # running as root, so fetch via http (no need to tag/push)
+        repo: https://github.com/{{ mc_es_ansible_elasticsearch_repo }}.git
         dest: '{{ mc_es_ansible_elasticsearch }}'
         force: '{{ mc_es_ansible_elasticsearch_force_checkout_cleanup }}'
         update: '{{ mc_es_ansible_elasticsearch_force_checkout_cleanup }}'

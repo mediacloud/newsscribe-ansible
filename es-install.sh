@@ -49,47 +49,68 @@ if ! git diff --quiet; then
     fatal
 fi
 
-if ! git diff --quiet $UPSTREAM/prod; then
+if ! git diff --quiet $UPSTREAM/prod >/dev/null 2>&1; then
     echo repo has not been pushed/merged 1>&2
     fatal
 fi
 
 echo 'checking push (for tagging)'
-if ! git push --dry-run; then
+if ! git push --dry-run >/dev/null 2>&1; then
     echo push test failed 1>&2
     fatal
 fi
 
+################ get ansible-elastic from github
+
 TMP=$(awk '/mc_tmp:/ { print $2 }' es-vars.yml)
-if [ -d tmp ]; then
-   echo tmp directory exists 1>&2
-   exit 1
+if [ "x$TMP" = x ]; then
+    echo could not read mc_tmp setting 1>&2
+    exit 1
+elif [ -d $TMP ]; then
+    # rather than figuring out if it's disposable, let the human..
+    echo $TMP directory exists 1>&2
+    exit 1
 fi
 
 # get mc_es_ansible_elasticsearch_repo from es-vars.yml?
-ANSIBLE_ELASTIC_REPO=$(awk '/^mc_es_ansible_elasticsearch_repo:.*git@github.com/ { print $2 }' es-vars.yml)
+ANSIBLE_ELASTIC_REPO=$(awk '/^mc_es_ansible_elasticsearch_repo: / { print $2 }' es-vars.yml)
+if [ "x$ANSIBLE_ELASTIC_REPO" = x ]; then
+    echo could not read mc_es_ansible_elasticsearch_repo setting 1>&2
+    exit 1
+fi
+
+#### check out into TMP directory
+
+CWD=$(pwd)
+trap "cd $CWD; rm -rf tmp" 0
 mkdir $TMP
 cd $TMP
-if ! git clone $ANSIBLE_ELASTIC_REPO; then
+echo cloning $ANSIBLE_ELASTIC_REPO
+# clone using ssh url, for pushing tag
+if ! git clone https://git@github.com/${ANSIBLE_ELASTIC_REPO}.git >/dev/null; then
     echo git clone failed 1>&2
-    exit
+    exit 1
 fi
+echo testing $ANSIBLE_ELASTIC_REPO push
+if ! git push --dry-run; then
+    exit 1
+fi
+cd ..
 quit_if_debug
 
-TAG=success-$(date '%Y-%m-%d-%H-%M-%S')-${UNAME}
+################ run ansible (shudder)
+
 # run es-install.yml playbook:
 if sudo venv/bin/ansible-playbook -i es-inventory.yml es-install.yml; then
+    TAG=success-$(date '%Y-%m-%d-%H-%M-%S')-${UNAME}
+
     echo "SUCCESS!! applying tag $TAG and pushing to $ORIGIN"
     git tag $TAG
     git push $ORIGIN $TAG
 
     echo "applying $TAG to ansible-elasticsearch"
-    cd tmp/ansible-elasticsearch
-    git tag $TAG
-    git push origin $TAG
-
-    echo removing tmp directory
-    rm -rf tmp
+    (cd tmp/ansible-elasticsearch; git tag $TAG; git push origin $TAG)
 echo
-    echo FAILED -- not tagged
+    echo ansible run failed -- not tagged
+    exit 1
 fi
