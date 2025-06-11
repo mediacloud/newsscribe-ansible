@@ -80,6 +80,9 @@ echo testing $ANSIBLE_ELASTIC_REPO push
 if ! git push --dry-run; then
     exit 1
 fi
+# create __pycache__ directory, so it won't be created when root
+# and can't be removed by regular user!
+mkdir -p filter_plugins/__pycache__
 cd ..
 
 ################ run ansible (shudder)
