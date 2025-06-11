@@ -88,9 +88,9 @@ cd ..
 if sudo venv/bin/ansible-playbook -i es-inventory.yml es-install.yml; then
     TAG=success-$(date '+%Y-%m-%d-%H-%M-%S')-${UNAME}
 
-    echo "SUCCESS!! applying tag $TAG and pushing to $ORIGIN"
+    echo "SUCCESS!! applying tag $TAG and pushing to $UPSTREAM"
     git tag $TAG
-    git push $ORIGIN $TAG
+    git push $UPSTREAM $TAG
 
     echo "applying $TAG to ansible-elasticsearch"
     (cd tmp/ansible-elasticsearch; git tag $TAG; git push origin $TAG)
