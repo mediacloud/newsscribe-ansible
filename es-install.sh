@@ -72,7 +72,7 @@ mkdir $TMP
 cd $TMP
 echo cloning $ANSIBLE_ELASTIC_REPO
 # clone using ssh url, for pushing tag
-if ! git clone https://git@github.com/${ANSIBLE_ELASTIC_REPO}.git >/dev/null; then
+if ! git clone git@github.com/${ANSIBLE_ELASTIC_REPO}.git >/dev/null; then
     echo git clone failed 1>&2
     exit 1
 fi
@@ -86,7 +86,7 @@ cd ..
 
 # run es-install.yml playbook:
 if sudo venv/bin/ansible-playbook -i es-inventory.yml es-install.yml; then
-    TAG=success-$(date '%Y-%m-%d-%H-%M-%S')-${UNAME}
+    TAG=success-$(date '+%Y-%m-%d-%H-%M-%S')-${UNAME}
 
     echo "SUCCESS!! applying tag $TAG and pushing to $ORIGIN"
     git tag $TAG
