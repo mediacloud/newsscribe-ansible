@@ -1,21 +1,8 @@
 #!/bin/sh
 
-#DEBUG=1
-if [ "$xDEBUG" != x ]; then
-    fatal() {
-	echo debug: continuing
-    }
-    quit_if_debug() {
-	exit
-    }
-else
-    fatal() {
-	exit 1
-    }
-    quit_if_debug() {
-	true
-    }
-fi
+fatal() {
+    exit 1
+}
 
 UNAME=$(whoami)
 if [ "x$UNAME" = xroot ]; then
@@ -94,7 +81,6 @@ if ! git push --dry-run; then
     exit 1
 fi
 cd ..
-quit_if_debug
 
 ################ run ansible (shudder)
 
