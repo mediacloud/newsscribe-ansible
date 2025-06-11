@@ -127,7 +127,7 @@ need them in the future.  The most likely case for a change is that
 some step needs to be disabled, in which case the polite thing to do
 is put the offending operation under `when: es_some_new_variable` and
 add `es_some_new_variable: true` to
-`ansible-elasticsearch/vars/main.yml` and add `es_some_new_variable:
+`ansible-elasticsearch/defaults/main.yml` and add `es_some_new_variable:
 false` to `newsscribe-ansible/es-vars.yml` (ie; see `es_certificates`,
 which was disabled because it didn't run as-is under molecule).
 

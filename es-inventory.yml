@@ -12,9 +12,10 @@ all:
     es07.newsscribe.angwin:
     es08.newsscribe.angwin:
   vars:
-    # defaults for all members of group.
+    # defaults for all members of group
+    # NOTE! Anything here will be overridden by es-vars!!!
     mc_es_cluster_name: mc_es_cluster
-    mc_es_http_port: 9209  # TEMP until old cluster gone?
+    mc_es_http_port: 9209  # TEMP until old cluster gone? (MUST be supplied)
 
     # master nodes:
     # NOTE! strings here MUST match entries in hosts map above!
@@ -22,6 +23,6 @@ all:
       - es01.newsscribe.angwin
       - es02.newsscribe.angwin
       - es03.newsscribe.angwin
-    mc_es_transport_port: 9309  # TEMP until old cluster gone?
+    mc_es_transport_port: 9309  # TEMP until old cluster gone? (MUST be supplied)
 
     # PLEASE ADD VARS ABOVE IN SORTED ORDER

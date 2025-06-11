@@ -9,6 +9,7 @@ es_heap_size: 1g
 # mostly overrides to ansible-elasticsearch defaults
 # and values for es_config
 mc_es_cluster_name: test_cluster
+mc_es_http_port: 9299
 
 # force cluster initialization!
 mc_es_initialize: true
@@ -16,10 +17,9 @@ mc_es_network_host: 0.0.0.0
 mc_es_reindex_whitelist: []
 # NOTE: must match entries in molecule.yml "platforms" dict
 # WISH: assemble using a property in "platforms" entries
-mc_es_seed_hosts:
-  - es-test-1
-  - es-test-2
-  - es-test-3
+mc_es_seed_hosts: [es-test-1, es-test-2, es-test-3]
+mc_es_transport_port: 9399
+
 # uncomment for debugging (avoid pushing to ansible-elasticsearch repo):
 # mc_es_ansible_elasticsearch_force_checkout_cleanup: false  #  DO NOT COMMIT UNCOMMENTED!!!
 
