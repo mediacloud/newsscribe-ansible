@@ -94,7 +94,7 @@ if sudo venv/bin/ansible-playbook -i es-inventory.yml es-install.yml; then
 
     echo "applying $TAG to ansible-elasticsearch"
     (cd tmp/ansible-elasticsearch; git tag $TAG; git push origin $TAG)
-echo
+else
     echo ansible run failed -- not tagged
     exit 1
 fi
