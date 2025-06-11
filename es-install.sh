@@ -18,7 +18,7 @@ fi
 echo upstream repo $UPSTREAM $(git remote get-url $UPSTREAM)
 
 BRANCH=$(git branch --show-current)
-if [ "x$BRANCH" != prod ]; then
+if [ "x$BRANCH" != xprod ]; then
     echo not on prod branch 1>&2
     fatal
 fi
