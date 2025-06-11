@@ -72,7 +72,7 @@ mkdir $TMP
 cd $TMP
 echo cloning $ANSIBLE_ELASTIC_REPO
 # clone using ssh url, for pushing tag
-if ! git clone git@github.com/${ANSIBLE_ELASTIC_REPO}.git >/dev/null; then
+if ! git clone git@github.com:${ANSIBLE_ELASTIC_REPO}.git >/dev/null; then
     echo git clone failed 1>&2
     exit 1
 fi
